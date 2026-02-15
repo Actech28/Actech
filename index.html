@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>蓝天白云PVE - Rust专属PVE服务器</title>
+    <title>蓝天白云PVE - Rust PVE服务器</title>
     <style>
         /* 全局样式重置 */
         * {
@@ -54,7 +54,7 @@
             padding: 2rem 5%;
         }
 
-        /* 英雄区（首屏） */
+        /* 英雄区（首屏）- 仅展示标题和介绍 */
         .hero {
             text-align: center;
             padding: 4rem 0;
@@ -75,7 +75,7 @@
             color: #eee;
         }
 
-        /* 服务器地址样式 */
+        /* 服务器地址样式 - 强化中间展示效果 */
         .server-addresses {
             background: rgba(100, 181, 246, 0.1);
             border: 1px solid #64B5F6;
@@ -176,6 +176,13 @@
             background: #64B5F6;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(100, 181, 246, 0.5);
+        }
+
+        /* 中间核心区域样式 - 强化视觉中心 */
+        .core-section {
+            text-align: center;
+            padding: 3rem 0;
+            margin: 4rem 0;
         }
 
         .qq-group-number {
@@ -335,17 +342,39 @@
 
     <!-- 导航栏 -->
     <header>
-        <div class="server-name">蓝天白云PVE <span class="server-tag">Rust PVE专属服务器</span></div>
+        <div class="server-name">蓝天白云PVE <span class="server-tag">Rust PVE服务器</span></div>
         <div>QQ群: <span class="qq-group-number">1079803839</span></div>
     </header>
 
     <!-- 主内容区 -->
     <div class="container">
-        <!-- 首屏宣传区 -->
+        <!-- 首屏宣传区 - 标题和介绍 -->
         <section class="hero">
             <h1>蓝天白云PVE</h1>
-            <p>欢迎加入Rust蓝天白云PVE服务器！在这里没有激烈的PVP对抗，只有轻松的建造、采集与探索，打造属于你的专属家园。我们承诺稳定开服、公平公正，让你体验最纯粹的Rust生存乐趣！</p>
-            
+            <p>欢迎加入Rust蓝天白云PVE服务器！在这里没有激烈的PVP对抗，只有轻松的建造、采集与探索，打造属于你的专属家园。我们服务器长久稳定、公平公正，在这里体验有趣的内容！</p>
+        </section>
+
+        <!-- 服务器信息模块 - 移到标题介绍下方 -->
+        <section class="server-info">
+            <h2>🎮 服务器选择</h2>
+            <div class="server-info-grid">
+                <div class="server-info-card">
+                    <h3>社区服 蓝天PVE</h3>
+                    <p>服务器类型：原倍仿官</p>
+                    <p>没有太多的插件 偏向休闲养老玩家</p>
+                    <p style="margin-top: 0.5rem; color: #ccc;">直连地址可在下方区域直接复制</p>
+                </div>
+                <div class="server-info-card">
+                    <h3>模组服 白云PVE</h3>
+                    <p>服务器类型：多样模组</p>
+                    <p>诸多插件玩法多样 偏向探索的玩家</p>
+                    <p style="margin-top: 0.5rem; color: #ccc;">直连地址可在下方区域直接复制</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 核心区域 - 中间展示服务器地址和QQ群按钮 -->
+        <section class="core-section">
             <!-- 服务器直连地址展示（含Connect，一键复制） -->
             <div class="server-addresses">
                 <h2>📡 服务器直连地址</h2>
@@ -363,55 +392,36 @@
             <a href="https://qm.qq.com/cgi-bin/qm/qr?k=6Q4IVZvkaWImBXGjpT2d4GtPIuFqLRWc&jump_from=webapi&authKey=IsLOSVFbk7CWWu/oG1iu65mgEq55P/RVbaqK3LUI9pmn2iK6XqA1GfxzlSdb7ezG" 
                target="_blank" 
                class="qq-group-btn">
-                加入QQ群：1079803839
+                点击这里快速加入QQ群
             </a>
-            <p style="color: #ccc;">获取开服公告、最新福利及专属指导</p>
-        </section>
-
-        <!-- 服务器信息模块（含二次复制按钮） -->
-        <section class="server-info">
-            <h2>🎮 服务器信息</h2>
-            <div class="server-info-grid">
-                <div class="server-info-card">
-                    <h3>蓝天PVE服务器</h3>
-                    <p>直连地址：<span class="qq-group-number">Connect cmcc28.top:10000</span></p>
-                    <button class="copy-btn" style="margin-top: 0.8rem;" onclick="copyToClipboard('Connect cmcc28.top:10000')">复制地址</button>
-                    <p style="margin-top: 0.5rem; color: #ccc;">适合喜欢探索挑战的玩家</p>
-                </div>
-                <div class="server-info-card">
-                    <h3>白云PVE服务器</h3>
-                    <p>直连地址：<span class="qq-group-number">Connect cmcc28.top:10086</span></p>
-                    <button class="copy-btn" style="margin-top: 0.8rem;" onclick="copyToClipboard('Connect cmcc28.top:10086')">复制地址</button>
-                    <p style="margin-top: 0.5rem; color: #ccc;">适合偏好休闲建造的玩家</p>
-                </div>
-            </div>
+            <p style="color: #ccc;">获取清档时间 最新消息及问题解答</p>
         </section>
 
         <!-- 服务器特色 -->
         <section class="features">
             <div class="feature-card">
-                <h3>纯PVE环境</h3>
-                <p>无玩家对抗，告别抄家与偷袭，专注于建造、采集和探索，新手也能安心发育，享受休闲生存的乐趣。</p>
+                <h3>PVE环境</h3>
+                <p>玩家之间无伤害，告别抄家与偷袭，专注于建造、采集和探索，新手也能安心发育，享受休闲生存的乐趣。</p>
             </div>
             <div class="feature-card">
                 <h3>稳定开服</h3>
-                <p>高性能服务器硬件，7*24小时稳定运行，定期备份数据，避免因服务器崩溃导致进度丢失。</p>
+                <p>服务器采用Ultra9-285K高性能处理器，7*24小时稳定运行，定期备份数据，避免因服务器崩溃导致数据丢失。</p>
             </div>
             <div class="feature-card">
-                <h3>友好管理</h3>
-                <p>管理员及时响应问题，公平处理各类纠纷，无霸王条款，打造和谐的服务器氛围。</p>
+                <h3>服主管理</h3>
+                <p>单服主管理服务器，无任职管理，无权限滥用问题，公平处理各类纠纷，无霸王条款，打造和谐的服务器氛围。</p>
             </div>
             <div class="feature-card">
-                <h3>适度倍率</h3>
-                <p>采集、建造倍率合理调整，既不肝也不破坏游戏平衡，让你轻松体验游戏内容。</p>
+                <h3>原倍采集</h3>
+                <p>采集倍率都为原倍，3-5倍少量物品堆叠不破坏游戏平衡同时增加方便性实用性 经久耐玩体验游戏原版内容。</p>
             </div>
             <div class="feature-card">
                 <h3>定期活动</h3>
-                <p>不定期举办建筑大赛、资源福利等活动，参与即可获得稀有物资，增加游戏趣味性。</p>
+                <p>不定期举办建筑大赛、PVP战斗圈互欧、赛车比赛等额外的有趣活动，参与即可获得神秘奖励，增加游戏趣味性。</p>
             </div>
             <div class="feature-card">
-                <h3>新手保护</h3>
-                <p>为新手提供基础物资扶持，专属新手指导，快速上手游戏，告别萌新期的迷茫。</p>
+                <h3>防盗全面</h3>
+                <p>不能上锁物品全部带有主动防盗，玩家离线也带有防盗,其他官方能上锁的物品为玩家保留了手动上锁</p>
             </div>
         </section>
 
@@ -430,9 +440,9 @@
 
     <!-- 页脚 -->
     <footer>
-        <p>蓝天白云PVE © 2026 版权所有 | 专属Rust PVE服务器</p>
+        <p> 蓝天白云工作室 Actech © 2026 版权所有 | Rust  PVE服务器</p>
         <p style="margin-top: 0.5rem; color: #ccc;">QQ交流群：<span class="qq-group-number">1079803839</span></p>
-        <p style="margin-top: 0.3rem; color: #999;">服务器地址：蓝天PVE(Connect cmcc28.top:10000) | 白云PVE(Connect cmcc28.top:10086)</p>
+        <p style="margin-top: 0.3rem; color: #999;">有任何问题欢迎随时入群联系我们</p>
     </footer>
 
     <script>
