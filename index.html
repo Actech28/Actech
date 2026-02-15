@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蓝天白云PVE - Rust专属PVE服务器</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* 页面背景与基础样式 */
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), 
+                        url('https://picsum.photos/id/1018/1920/1080') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        /* 导航栏 */
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #64B5F6;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .server-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #64B5F6;
+        }
+
+        .server-tag {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        /* 主内容区 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        /* 英雄区（首屏） */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #64B5F6;
+            text-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: #eee;
+        }
+
+        /* 服务器地址样式 */
+        .server-addresses {
+            background: rgba(100, 181, 246, 0.1);
+            border: 1px solid #64B5F6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            max-width: 650px;
+            margin: 1.5rem auto;
+        }
+
+        .server-addresses h2 {
+            font-size: 1.5rem;
+            color: #64B5F6;
+            margin-bottom: 1rem;
+        }
+
+        .address-item {
+            font-size: 1.1rem;
+            margin: 0.8rem 0;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .address-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .address-item span {
+            color: #ffeb3b;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        /* 复制按钮样式 */
+        .copy-btn {
+            background: #4299E1;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover {
+            background: #64B5F6;
+            box-shadow: 0 0 8px rgba(100, 181, 246, 0.5);
+        }
+
+        .copy-btn.copied {
+            background: #4CAF50;
+        }
+
+        /* 复制提示样式 */
+        .copy-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+        }
+
+        /* QQ群按钮样式 - 纯HTML按钮 */
+        .qq-group-btn {
+            display: inline-block;
+            background: #4299E1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 2rem 0 1rem;
+        }
+
+        .qq-group-btn:hover {
+            background: #64B5F6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 181, 246, 0.5);
+        }
+
+        .qq-group-number {
+            font-weight: bold;
+            color: #ffeb3b;
+        }
+
+        /* 服务器信息模块 */
+        .server-info {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #64B5F6;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .server-info h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #64B5F6;
+        }
+
+        .server-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .server-info-card {
+            background: rgba(100, 181, 246, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #64B5F6;
+        }
+
+        .server-info-card h3 {
+            color: #64B5F6;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* 服务器特色模块 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #64B5F6;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(100, 181, 246, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #64B5F6;
+        }
+
+        /* 服务器规则模块 */
+        .rules {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #64B5F6;
+            margin-bottom: 3rem;
+        }
+
+        .rules h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #64B5F6;
+            text-align: center;
+        }
+
+        .rules ul {
+            list-style: none;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .rules li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .rules li:last-child {
+            border-bottom: none;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-top: 2px solid #64B5F6;
+            margin-top: 2rem;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .server-name {
+                font-size: 1.5rem;
+            }
+
+            .server-addresses {
+                padding: 1rem;
+                margin: 1rem auto;
+                max-width: 90%;
+            }
+
+            .address-item {
+                font-size: 0.95rem;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .address-text {
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+
+            .copy-btn {
+                width: 100%;
+            }
+
+            .qq-group-btn {
+                padding: 0.8rem 1.8rem;
+                font-size: 1rem;
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 复制成功提示 -->
+    <div class="copy-toast" id="copyToast">复制成功！</div>
+
+    <!-- 导航栏 -->
+    <header>
+        <div class="server-name">蓝天白云PVE <span class="server-tag">Rust PVE专属服务器</span></div>
+        <div>QQ群: <span class="qq-group-number">1079803839</span></div>
+    </header>
+
+    <!-- 主内容区 -->
+    <div class="container">
+        <!-- 首屏宣传区 -->
+        <section class="hero">
+            <h1>蓝天白云PVE</h1>
+            <p>欢迎加入Rust蓝天白云PVE服务器！在这里没有激烈的PVP对抗，只有轻松的建造、采集与探索，打造属于你的专属家园。我们承诺稳定开服、公平公正，让你体验最纯粹的Rust生存乐趣！</p>
+            
+            <!-- 服务器直连地址展示（含Connect，一键复制） -->
+            <div class="server-addresses">
+                <h2>📡 服务器直连地址</h2>
+                <div class="address-item">
+                    <div class="address-text">蓝天PVE <span>Connect cmcc28.top:10000</span></div>
+                    <button class="copy-btn" onclick="copyToClipboard('Connect cmcc28.top:10000')">复制地址</button>
+                </div>
+                <div class="address-item">
+                    <div class="address-text">白云PVE <span>Connect cmcc28.top:10086</span></div>
+                    <button class="copy-btn" onclick="copyToClipboard('Connect cmcc28.top:10086')">复制地址</button>
+                </div>
+            </div>
+
+            <!-- 纯HTML QQ群加入按钮 -->
+            <a href="https://qm.qq.com/cgi-bin/qm/qr?k=6Q4IVZvkaWImBXGjpT2d4GtPIuFqLRWc&jump_from=webapi&authKey=IsLOSVFbk7CWWu/oG1iu65mgEq55P/RVbaqK3LUI9pmn2iK6XqA1GfxzlSdb7ezG" 
+               target="_blank" 
+               class="qq-group-btn">
+                加入QQ群：1079803839
+            </a>
+            <p style="color: #ccc;">获取开服公告、最新福利及专属指导</p>
+        </section>
+
+        <!-- 服务器信息模块（含二次复制按钮） -->
+        <section class="server-info">
+            <h2>🎮 服务器信息</h2>
+            <div class="server-info-grid">
+                <div class="server-info-card">
+                    <h3>蓝天PVE服务器</h3>
+                    <p>直连地址：<span class="qq-group-number">Connect cmcc28.top:10000</span></p>
+                    <button class="copy-btn" style="margin-top: 0.8rem;" onclick="copyToClipboard('Connect cmcc28.top:10000')">复制地址</button>
+                    <p style="margin-top: 0.5rem; color: #ccc;">适合喜欢探索挑战的玩家</p>
+                </div>
+                <div class="server-info-card">
+                    <h3>白云PVE服务器</h3>
+                    <p>直连地址：<span class="qq-group-number">Connect cmcc28.top:10086</span></p>
+                    <button class="copy-btn" style="margin-top: 0.8rem;" onclick="copyToClipboard('Connect cmcc28.top:10086')">复制地址</button>
+                    <p style="margin-top: 0.5rem; color: #ccc;">适合偏好休闲建造的玩家</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 服务器特色 -->
+        <section class="features">
+            <div class="feature-card">
+                <h3>纯PVE环境</h3>
+                <p>无玩家对抗，告别抄家与偷袭，专注于建造、采集和探索，新手也能安心发育，享受休闲生存的乐趣。</p>
+            </div>
+            <div class="feature-card">
+                <h3>稳定开服</h3>
+                <p>高性能服务器硬件，7*24小时稳定运行，定期备份数据，避免因服务器崩溃导致进度丢失。</p>
+            </div>
+            <div class="feature-card">
+                <h3>友好管理</h3>
+                <p>管理员及时响应问题，公平处理各类纠纷，无霸王条款，打造和谐的服务器氛围。</p>
+            </div>
+            <div class="feature-card">
+                <h3>适度倍率</h3>
+                <p>采集、建造倍率合理调整，既不肝也不破坏游戏平衡，让你轻松体验游戏内容。</p>
+            </div>
+            <div class="feature-card">
+                <h3>定期活动</h3>
+                <p>不定期举办建筑大赛、资源福利等活动，参与即可获得稀有物资，增加游戏趣味性。</p>
+            </div>
+            <div class="feature-card">
+                <h3>新手保护</h3>
+                <p>为新手提供基础物资扶持，专属新手指导，快速上手游戏，告别萌新期的迷茫。</p>
+            </div>
+        </section>
+
+        <!-- 服务器规则 -->
+        <section class="rules">
+            <h2>服务器规则</h2>
+            <ul>
+                <li>❶ 禁止使用外挂、作弊脚本等违规工具，一经发现永久封禁。</li>
+                <li>❷ 禁止恶意卡BUG、利用漏洞获取不当利益，发现BUG请及时反馈管理。</li>
+                <li>❸ 禁止辱骂、攻击其他玩家，文明交流，共同维护良好氛围。</li>
+                <li>❹ 禁止建造阻碍公共资源、影响其他玩家正常游戏的建筑，违规将被清理。</li>
+                <li>❺ 遵守管理员的合理管理，有异议可文明沟通，禁止恶意抬杠、挑衅管理。</li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>蓝天白云PVE © 2026 版权所有 | 专属Rust PVE服务器</p>
+        <p style="margin-top: 0.5rem; color: #ccc;">QQ交流群：<span class="qq-group-number">1079803839</span></p>
+        <p style="margin-top: 0.3rem; color: #999;">服务器地址：蓝天PVE(Connect cmcc28.top:10000) | 白云PVE(Connect cmcc28.top:10086)</p>
+    </footer>
+
+    <script>
+        // 复制到剪贴板函数
+        function copyToClipboard(text) {
+            // 创建临时文本框
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            // 选中并复制
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999); // 适配移动设备
+            document.execCommand('copy');
+            // 移除临时文本框
+            document.body.removeChild(tempInput);
+
+            // 显示复制成功提示
+            const toast = document.getElementById('copyToast');
+            toast.classList.add('show');
+            
+            // 按钮状态变化
+            const activeBtn = event.target;
+            activeBtn.textContent = '已复制';
+            activeBtn.classList.add('copied');
+
+            // 2秒后恢复状态
+            setTimeout(() => {
+                toast.classList.remove('show');
+                activeBtn.textContent = '复制地址';
+                activeBtn.classList.remove('copied');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
