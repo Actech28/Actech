@@ -13,6 +13,17 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* 滚动淡入基础样式 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* 页面背景与基础样式 */
         body {
             background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), 
@@ -20,9 +31,10 @@
             background-size: cover;
             color: #fff;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* 导航栏 */
+        /* 导航栏 - 滚动背景变化动画 */
         header {
             background: rgba(0, 0, 0, 0.7);
             padding: 1rem 5%;
@@ -33,12 +45,25 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background 0.3s ease, padding 0.3s ease;
+        }
+        /* 滚动后导航栏样式 */
+        header.scrolled {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 0.8rem 5%;
         }
 
         .server-name {
             font-size: 1.8rem;
             font-weight: bold;
             color: #64B5F6;
+            /* 标题呼吸动画 */
+            animation: breath 3s ease-in-out infinite;
+        }
+        /* 呼吸动画关键帧 */
+        @keyframes breath {
+            0%, 100% { text-shadow: 0 0 10px rgba(100, 181, 246, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(100, 181, 246, 0.8); }
         }
 
         .server-tag {
@@ -66,6 +91,13 @@
             margin-bottom: 1rem;
             color: #64B5F6;
             text-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
+            /* 标题轻微缩放动画 */
+            animation: titleFloat 4s ease-in-out infinite;
+        }
+        /* 标题浮动动画 */
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
         .hero p {
@@ -83,6 +115,11 @@
             padding: 1.5rem;
             max-width: 650px;
             margin: 1.5rem auto;
+            /* hover轻微发光 */
+            transition: box-shadow 0.3s ease;
+        }
+        .server-addresses:hover {
+            box-shadow: 0 0 15px rgba(100, 181, 246, 0.2);
         }
 
         .server-addresses h2 {
@@ -101,6 +138,11 @@
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
+            /* hover轻微缩放 */
+            transition: transform 0.2s ease;
+        }
+        .address-item:hover {
+            transform: scale(1.01);
         }
 
         .address-text {
@@ -114,7 +156,7 @@
             font-weight: bold;
         }
 
-        /* 复制按钮样式 */
+        /* 复制按钮样式 - 增强hover效果 */
         .copy-btn {
             background: #4299E1;
             color: white;
@@ -123,25 +165,46 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 0.9rem;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease; /* 延长过渡时间 */
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+        /* 按钮点击波纹效果 */
+        .copy-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+        .copy-btn:active::after {
+            width: 200px;
+            height: 200px;
+            opacity: 0;
         }
 
         .copy-btn:hover {
             background: #64B5F6;
-            box-shadow: 0 0 8px rgba(100, 181, 246, 0.5);
+            box-shadow: 0 0 12px rgba(100, 181, 246, 0.6); /* 增强阴影 */
+            transform: translateY(-2px); /* 轻微上移 */
         }
 
         .copy-btn.copied {
             background: #4CAF50;
         }
 
-        /* 复制提示样式 */
+        /* 复制提示样式 - 优化动画 */
         .copy-toast {
             position: fixed;
             top: 20px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(-10px); /* 初始上移 */
             background: rgba(76, 175, 80, 0.9);
             color: white;
             padding: 0.8rem 1.5rem;
@@ -149,14 +212,15 @@
             font-size: 1rem;
             z-index: 9999;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease; /* 新增位移过渡 */
         }
 
         .copy-toast.show {
             opacity: 1;
+            transform: translateX(-50%) translateY(0); /* 滑入 */
         }
 
-        /* QQ群按钮样式 - 纯HTML按钮 */
+        /* QQ群按钮样式 - 增强动态效果 */
         .qq-group-btn {
             display: inline-block;
             background: #4299E1;
@@ -168,14 +232,30 @@
             font-weight: 600;
             text-decoration: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease; /* 延长过渡 */
             margin: 2rem 0 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        /* 按钮渐变光效 */
+        .qq-group-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.8s ease;
+        }
+        .qq-group-btn:hover::before {
+            left: 100%;
         }
 
         .qq-group-btn:hover {
             background: #64B5F6;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(100, 181, 246, 0.5);
+            transform: translateY(-3px); /* 增强上移 */
+            box-shadow: 0 8px 20px rgba(100, 181, 246, 0.4); /* 增强阴影 */
         }
 
         /* 中间核心区域样式 - 强化视觉中心 */
@@ -218,6 +298,12 @@
             padding: 1.5rem;
             border-radius: 8px;
             border: 1px solid #64B5F6;
+            /* 卡片hover效果 */
+            transition: all 0.3s ease;
+        }
+        .server-info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(100, 181, 246, 0.2);
         }
 
         .server-info-card h3 {
@@ -226,7 +312,216 @@
             font-size: 1.3rem;
         }
 
-        /* 服务器特色模块 */
+        /* 清档倒计时样式 - 优化布局，整合所有清档时间逻辑 */
+        .wipe-countdown {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #64B5F6;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem auto;
+            max-width: 700px;
+            text-align: center;
+            /* 轻微脉冲动画 */
+            animation: pulse 5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 rgba(100, 181, 246, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(100, 181, 246, 0.15); }
+        }
+
+        .wipe-countdown h2 {
+            color: #64B5F6;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .countdown-display {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(100, 181, 246, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #64B5F6;
+            /* hover缩放 */
+            transition: transform 0.2s ease;
+        }
+        .countdown-item:hover {
+            transform: scale(1.05);
+        }
+
+        .countdown-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffeb3b;
+            font-family: 'Courier New', monospace;
+            /* 数字变化时的轻微缩放 */
+            transition: transform 0.2s ease;
+        }
+        /* 数字更新时触发的动画 */
+        .countdown-number.change {
+            transform: scale(1.1);
+        }
+
+        .countdown-label {
+            font-size: 1rem;
+            color: #eee;
+            margin-top: 0.5rem;
+        }
+
+        .next-wipe-date {
+            color: #64B5F6;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+        /* 标注清档类型（官清/半月清） */
+        .wipe-type {
+            color: #ff9800;
+            font-size: 1rem;
+            margin-top: 0.3rem;
+            font-weight: bold;
+        }
+
+        /* 清档时间表样式 - 重构为月份卡片 */
+        .wipe-schedule {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #64B5F6;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem auto;
+            max-width: 900px;
+        }
+
+        .wipe-schedule h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #64B5F6;
+            text-align: center;
+        }
+
+        /* 年份切换按钮组样式 */
+        .year-toggle-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .year-toggle-btn {
+            background: rgba(100, 181, 246, 0.1);
+            border: 1px solid #64B5F6;
+            color: #fff;
+            padding: 0.8rem 2rem;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .year-toggle-btn.active {
+            background: #64B5F6;
+            color: #000;
+            box-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
+        }
+
+        .year-toggle-btn:hover:not(.active) {
+            background: rgba(100, 181, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 年份清档表区域样式 - 切换过渡 */
+        .year-wipe-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .year-wipe-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 月份卡片容器 - 网格布局 */
+        .months-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        /* 月份卡片样式 - 核心修改 */
+        .month-card {
+            background: rgba(100, 181, 246, 0.08);
+            border: 1px solid #64B5F6;
+            border-radius: 8px;
+            padding: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .month-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 181, 246, 0.15);
+            background: rgba(100, 181, 246, 0.12);
+        }
+
+        .month-card h4 {
+            color: #ffeb3b;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(100, 181, 246, 0.3);
+        }
+
+        /* 清档项样式 */
+        .wipe-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .wipe-item:last-child {
+            border-bottom: none;
+        }
+
+        .wipe-date {
+            font-size: 1rem;
+            color: #eee;
+        }
+
+        .wipe-type-tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .wipe-type-official {
+            background: #4299E1;
+            color: white;
+        }
+
+        .wipe-type-halfmonth {
+            background: #ff9800;
+            color: white;
+        }
+
+        /* 服务器特色模块 - 增强hover */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -239,12 +534,12 @@
             padding: 2rem;
             border-radius: 10px;
             border: 1px solid #64B5F6;
-            transition: transform 0.3s ease;
+            transition: all 0.4s ease; /* 延长过渡 */
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(100, 181, 246, 0.3);
+            transform: translateY(-8px); /* 增强上移 */
+            box-shadow: 0 8px 25px rgba(100, 181, 246, 0.3); /* 增强阴影 */
         }
 
         .feature-card h3 {
@@ -278,6 +573,12 @@
         .rules li {
             padding: 0.8rem 0;
             border-bottom: 1px solid #333;
+            /* li hover高亮 */
+            transition: color 0.2s ease;
+        }
+        .rules li:hover {
+            color: #64B5F6;
+            padding-left: 5px;
         }
 
         .rules li:last-child {
@@ -291,6 +592,22 @@
             background: rgba(0, 0, 0, 0.7);
             border-top: 2px solid #64B5F6;
             margin-top: 2rem;
+            /* 底部渐变光效 */
+            position: relative;
+        }
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #64B5F6, transparent);
+            animation: lineMove 3s ease-in-out infinite;
+        }
+        @keyframes lineMove {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
 
         /* 响应式适配 */
@@ -333,6 +650,73 @@
                 font-size: 1rem;
                 width: 80%;
             }
+
+            /* 倒计时响应式 */
+            .wipe-countdown {
+                padding: 1.5rem;
+                margin: 2rem auto;
+                max-width: 90%;
+            }
+
+            .wipe-countdown h2 {
+                font-size: 1.6rem;
+            }
+
+            .countdown-display {
+                gap: 1rem;
+            }
+
+            .countdown-item {
+                padding: 0.8rem 1rem;
+            }
+
+            .countdown-number {
+                font-size: 1.8rem;
+            }
+
+            .countdown-label {
+                font-size: 0.9rem;
+            }
+
+            .next-wipe-date, .wipe-type {
+                font-size: 0.95rem;
+            }
+
+            /* 清档时间表响应式 */
+            .wipe-schedule {
+                padding: 1.5rem;
+                margin: 2rem auto;
+                max-width: 90%;
+            }
+
+            .wipe-schedule h2 {
+                font-size: 1.6rem;
+            }
+
+            /* 年份切换按钮响应式 */
+            .year-toggle-btn {
+                padding: 0.6rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            /* 月份卡片响应式 */
+            .months-container {
+                grid-template-columns: 1fr;
+            }
+
+            .month-card {
+                padding: 1rem;
+            }
+
+            .month-card h4 {
+                font-size: 1.1rem;
+            }
+
+            .wipe-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
         }
     </style>
 </head>
@@ -341,7 +725,7 @@
     <div class="copy-toast" id="copyToast">复制成功！</div>
 
     <!-- 导航栏 -->
-    <header>
+    <header id="navbar">
         <div class="server-name">蓝天白云PVE <span class="server-tag">Rust PVE服务器</span></div>
         <div>QQ群: <span class="qq-group-number">1079803839</span></div>
     </header>
@@ -349,13 +733,13 @@
     <!-- 主内容区 -->
     <div class="container">
         <!-- 首屏宣传区 - 标题和介绍 -->
-        <section class="hero">
+        <section class="hero fade-in">
             <h1>蓝天白云PVE</h1>
             <p>欢迎加入Rust蓝天白云PVE服务器！在这里没有激烈的PVP对抗，只有轻松的建造、采集与探索，打造属于你的专属家园。我们服务器长久稳定、公平公正，在这里体验有趣的内容！</p>
         </section>
 
-        <!-- 服务器信息模块 - 移到标题介绍下方 -->
-        <section class="server-info">
+        <!-- 服务器信息模块 -->
+        <section class="server-info fade-in">
             <h2>🎮 服务器选择</h2>
             <div class="server-info-grid">
                 <div class="server-info-card">
@@ -373,9 +757,9 @@
             </div>
         </section>
 
-        <!-- 核心区域 - 中间展示服务器地址和QQ群按钮 -->
-        <section class="core-section">
-            <!-- 服务器直连地址展示（含Connect，一键复制） -->
+        <!-- 核心区域 -->
+        <section class="core-section fade-in">
+            <!-- 服务器直连地址 -->
             <div class="server-addresses">
                 <h2>📡 服务器直连地址</h2>
                 <div class="address-item">
@@ -388,17 +772,376 @@
                 </div>
             </div>
 
-            <!-- 纯HTML QQ群加入按钮 -->
+            <!-- QQ群按钮 - 移动到了服务器地址下方、倒计时上方 -->
             <a href="https://qm.qq.com/cgi-bin/qm/qr?k=6Q4IVZvkaWImBXGjpT2d4GtPIuFqLRWc&jump_from=webapi&authKey=IsLOSVFbk7CWWu/oG1iu65mgEq55P/RVbaqK3LUI9pmn2iK6XqA1GfxzlSdb7ezG" 
                target="_blank" 
                class="qq-group-btn">
                 点击这里快速加入QQ群
             </a>
             <p style="color: #ccc;">获取清档时间 最新消息及问题解答</p>
+
+            <!-- 清档倒计时模块 - 整合2026-2027所有清档时间，新增清档类型标注 -->
+            <section class="wipe-countdown">
+                <h2>⏰ 下次清档倒计时</h2>
+                <div class="countdown-display">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="days">00</span>
+                        <span class="countdown-label">天</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="hours">00</span>
+                        <span class="countdown-label">时</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="minutes">00</span>
+                        <span class="countdown-label">分</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="seconds">00</span>
+                        <span class="countdown-label">秒</span>
+                    </div>
+                </div>
+                <p class="next-wipe-date" id="nextWipeDate">下次清档：2026年2月20日</p>
+                <p class="wipe-type" id="wipeType">清档类型：半月清</p>
+            </section>
+
+            <!-- 清档时间表模块 - 重构为月份卡片样式 -->
+            <section class="wipe-schedule fade-in">
+                <h2>📅 清档时间表</h2>
+                
+                <!-- 年份切换按钮组 -->
+                <div class="year-toggle-group">
+                    <button class="year-toggle-btn active" data-year="2026">2026年</button>
+                    <button class="year-toggle-btn" data-year="2027">2027年</button>
+                </div>
+
+                <!-- 2026年清档时间 - 月份卡片形式 -->
+                <div class="year-wipe-section active" id="wipe-2026">
+                    <div class="months-container">
+                        <!-- 1月 -->
+                        <div class="month-card">
+                            <h4>1月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">1月2日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">1月16日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 2月 -->
+                        <div class="month-card">
+                            <h4>2月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">2月6日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">2月20日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 3月 -->
+                        <div class="month-card">
+                            <h4>3月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">3月6日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">3月20日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 4月 -->
+                        <div class="month-card">
+                            <h4>4月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">4月3日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">4月17日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 5月 -->
+                        <div class="month-card">
+                            <h4>5月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">5月1日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">5月15日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 6月 -->
+                        <div class="month-card">
+                            <h4>6月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">6月5日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">6月19日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 7月 -->
+                        <div class="month-card">
+                            <h4>7月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">7月3日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">7月17日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 8月 -->
+                        <div class="month-card">
+                            <h4>8月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">8月7日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">8月21日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 9月 -->
+                        <div class="month-card">
+                            <h4>9月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">9月4日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">9月18日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 10月 -->
+                        <div class="month-card">
+                            <h4>10月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">10月2日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">10月16日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 11月 -->
+                        <div class="month-card">
+                            <h4>11月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">11月6日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">11月20日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 12月 -->
+                        <div class="month-card">
+                            <h4>12月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">12月4日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">12月18日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2027年清档时间 - 月份卡片形式 -->
+                <div class="year-wipe-section" id="wipe-2027">
+                    <div class="months-container">
+                        <!-- 1月 -->
+                        <div class="month-card">
+                            <h4>1月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">1月1日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">1月15日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 2月 -->
+                        <div class="month-card">
+                            <h4>2月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">2月5日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">2月19日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 3月 -->
+                        <div class="month-card">
+                            <h4>3月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">3月5日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">3月19日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 4月 -->
+                        <div class="month-card">
+                            <h4>4月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">4月2日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">4月16日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">4月30日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 5月 -->
+                        <div class="month-card">
+                            <h4>5月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">5月14日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 6月 -->
+                        <div class="month-card">
+                            <h4>6月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">6月4日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">6月18日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 7月 -->
+                        <div class="month-card">
+                            <h4>7月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">7月2日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">7月16日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 8月 -->
+                        <div class="month-card">
+                            <h4>8月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">8月6日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">8月20日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 9月 -->
+                        <div class="month-card">
+                            <h4>9月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">9月3日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">9月17日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 10月 -->
+                        <div class="month-card">
+                            <h4>10月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">10月1日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">10月15日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 11月 -->
+                        <div class="month-card">
+                            <h4>11月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">11月5日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">11月19日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 12月 -->
+                        <div class="month-card">
+                            <h4>12月份</h4>
+                            <div class="wipe-item">
+                                <span class="wipe-date">12月3日</span>
+                                <span class="wipe-type-tag wipe-type-official">官清</span>
+                            </div>
+                            <div class="wipe-item">
+                                <span class="wipe-date">12月17日</span>
+                                <span class="wipe-type-tag wipe-type-halfmonth">半月清</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </section>
 
         <!-- 服务器特色 -->
-        <section class="features">
+        <section class="features fade-in">
             <div class="feature-card">
                 <h3>PVE环境</h3>
                 <p>玩家之间无伤害，告别抄家与偷袭，专注于建造、采集和探索，新手也能安心发育，享受休闲生存的乐趣。</p>
@@ -426,7 +1169,7 @@
         </section>
 
         <!-- 服务器规则 -->
-        <section class="rules">
+        <section class="rules fade-in">
             <h2>服务器规则</h2>
             <ul>
                 <li>❶ 禁止使用外挂、作弊脚本等违规工具，一经发现永久封禁。</li>
@@ -439,7 +1182,7 @@
     </div>
 
     <!-- 页脚 -->
-    <footer>
+    <footer class="fade-in">
         <p> 蓝天白云工作室 Actech © 2026 版权所有 | Rust  PVE服务器</p>
         <p style="margin-top: 0.5rem; color: #ccc;">QQ交流群：<span class="qq-group-number">1079803839</span></p>
         <p style="margin-top: 0.3rem; color: #999;">有任何问题欢迎随时入群联系我们</p>
@@ -448,15 +1191,12 @@
     <script>
         // 复制到剪贴板函数
         function copyToClipboard(text) {
-            // 创建临时文本框
             const tempInput = document.createElement('input');
             tempInput.value = text;
             document.body.appendChild(tempInput);
-            // 选中并复制
             tempInput.select();
-            tempInput.setSelectionRange(0, 99999); // 适配移动设备
+            tempInput.setSelectionRange(0, 99999);
             document.execCommand('copy');
-            // 移除临时文本框
             document.body.removeChild(tempInput);
 
             // 显示复制成功提示
@@ -475,6 +1215,179 @@
                 activeBtn.classList.remove('copied');
             }, 2000);
         }
+
+        // 清档倒计时核心 - 整合2026+2027所有官清/半月清时间，包含类型标注
+        const allWipeDates = [
+            // 2026年清档时间 | 格式：[日期, 清档类型]
+            [new Date(2026, 0, 2), '官清'],
+            [new Date(2026, 0, 16), '半月清'],
+            [new Date(2026, 1, 6), '官清'],
+            [new Date(2026, 1, 20), '半月清'],
+            [new Date(2026, 2, 6), '官清'],
+            [new Date(2026, 2, 20), '半月清'],
+            [new Date(2026, 3, 3), '官清'],
+            [new Date(2026, 3, 17), '半月清'],
+            [new Date(2026, 4, 1), '官清'],
+            [new Date(2026, 4, 15), '半月清'],
+            [new Date(2026, 5, 5), '官清'],
+            [new Date(2026, 5, 19), '半月清'],
+            [new Date(2026, 6, 3), '官清'],
+            [new Date(2026, 6, 17), '半月清'],
+            [new Date(2026, 7, 7), '官清'],
+            [new Date(2026, 7, 21), '半月清'],
+            [new Date(2026, 8, 4), '官清'],
+            [new Date(2026, 8, 18), '半月清'],
+            [new Date(2026, 9, 2), '官清'],
+            [new Date(2026, 9, 16), '半月清'],
+            [new Date(2026, 10, 6), '官清'],
+            [new Date(2026, 10, 20), '半月清'],
+            [new Date(2026, 11, 4), '官清'],
+            [new Date(2026, 11, 18), '半月清'],
+            // 2027年清档时间
+            [new Date(2027, 0, 1), '官清'],
+            [new Date(2027, 0, 15), '半月清'],
+            [new Date(2027, 1, 5), '官清'],
+            [new Date(2027, 1, 19), '半月清'],
+            [new Date(2027, 2, 5), '官清'],
+            [new Date(2027, 2, 19), '半月清'],
+            [new Date(2027, 3, 2), '官清'],
+            [new Date(2027, 3, 16), '半月清'],
+            [new Date(2027, 3, 30), '官清'],
+            [new Date(2027, 4, 14), '半月清'],
+            [new Date(2027, 5, 4), '官清'],
+            [new Date(2027, 5, 18), '半月清'],
+            [new Date(2027, 6, 2), '官清'],
+            [new Date(2027, 6, 16), '半月清'],
+            [new Date(2027, 7, 6), '官清'],
+            [new Date(2027, 7, 20), '半月清'],
+            [new Date(2027, 8, 3), '官清'],
+            [new Date(2027, 8, 17), '半月清'],
+            [new Date(2027, 9, 1), '官清'],
+            [new Date(2027, 9, 15), '半月清'],
+            [new Date(2027, 10, 5), '官清'],
+            [new Date(2027, 10, 19), '半月清'],
+            [new Date(2027, 11, 3), '官清'],
+            [new Date(2027, 11, 17), '半月清']
+        ];
+
+        // 保存上一次的倒计时数值，用于判断是否变化
+        let prevTime = { days: '', hours: '', minutes: '', seconds: '' };
+
+        // 获取下一个清档日期+对应类型
+        function getNextWipeInfo() {
+            const now = new Date();
+            // 过滤出未来的清档日期
+            const futureWipes = allWipeDates.filter(item => item[0] > now);
+            // 如果有未来的日期，返回第一个；否则返回最后一个（备用）
+            if (futureWipes.length > 0) {
+                return futureWipes[0];
+            } else {
+                return allWipeDates[allWipeDates.length - 1];
+            }
+        }
+
+        // 格式化日期显示（xxxx年x月x日）
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1; // 月份从0开始，加1
+            const day = date.getDate();
+            return `${year}年${month}月${day}日`;
+        }
+
+        // 更新倒计时显示
+        function updateCountdown() {
+            const [nextWipe, wipeType] = getNextWipeInfo();
+            // 更新下次清档日期和类型
+            document.getElementById('nextWipeDate').textContent = `下次清档：${formatDate(nextWipe)}`;
+            document.getElementById('wipeType').textContent = `清档类型：${wipeType}`;
+            
+            const now = new Date();
+            const diff = nextWipe - now; // 毫秒差值
+
+            // 计算天、时、分、秒（处理负数情况，确保不出现负值）
+            const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+            const hours = Math.max(0, Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+            const minutes = Math.max(0, Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
+            const seconds = Math.max(0, Math.floor((diff % (1000 * 60)) / 1000));
+
+            // 补零，保持两位数字显示
+            const daysStr = days.toString().padStart(2, '0');
+            const hoursStr = hours.toString().padStart(2, '0');
+            const minutesStr = minutes.toString().padStart(2, '0');
+            const secondsStr = seconds.toString().padStart(2, '0');
+
+            // 更新数字并添加跳动动画
+            updateTimeElement('days', daysStr);
+            updateTimeElement('hours', hoursStr);
+            updateTimeElement('minutes', minutesStr);
+            updateTimeElement('seconds', secondsStr);
+
+            // 保存当前数值，用于下次对比
+            prevTime = { days: daysStr, hours: hoursStr, minutes: minutesStr, seconds: secondsStr };
+        }
+
+        // 更新单个倒计时数字并添加动画
+        function updateTimeElement(id, value) {
+            const element = document.getElementById(id);
+            if (element.textContent !== value) {
+                element.classList.add('change');
+                element.textContent = value;
+                // 动画结束后移除类名
+                setTimeout(() => {
+                    element.classList.remove('change');
+                }, 200);
+            }
+        }
+
+        // 初始化倒计时并每秒更新
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // 滚动淡入效果
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const fadeInObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        fadeElements.forEach(el => fadeInObserver.observe(el));
+
+        // 新增：年份切换功能
+        const yearButtons = document.querySelectorAll('.year-toggle-btn');
+        const yearSections = document.querySelectorAll('.year-wipe-section');
+
+        yearButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // 移除所有按钮的激活状态
+                yearButtons.forEach(btn => btn.classList.remove('active'));
+                // 给当前点击的按钮添加激活状态
+                button.classList.add('active');
+                
+                // 获取要显示的年份
+                const targetYear = button.dataset.year;
+                
+                // 隐藏所有年份区域，显示目标年份区域
+                yearSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === `wipe-${targetYear}`) {
+                        section.classList.add('active');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
