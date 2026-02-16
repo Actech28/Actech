@@ -762,6 +762,7 @@
             <!-- 服务器直连地址 -->
             <div class="server-addresses">
                 <h2>📡 服务器直连地址</h2>
+                <h6>复制后游戏内按下键盘F1按键 打开控制台输入即可直接进入</h6>
                 <div class="address-item">
                     <div class="address-text">蓝天PVE <span>Connect cmcc28.top:10000</span></div>
                     <button class="copy-btn" onclick="copyToClipboard('Connect cmcc28.top:10000')">复制地址</button>
@@ -776,13 +777,13 @@
             <a href="https://qm.qq.com/cgi-bin/qm/qr?k=6Q4IVZvkaWImBXGjpT2d4GtPIuFqLRWc&jump_from=webapi&authKey=IsLOSVFbk7CWWu/oG1iu65mgEq55P/RVbaqK3LUI9pmn2iK6XqA1GfxzlSdb7ezG" 
                target="_blank" 
                class="qq-group-btn">
-                点击这里快速加入QQ群
+                🐧点击这里快速加入QQ群
             </a>
             <p style="color: #ccc;">获取清档时间 最新消息及问题解答</p>
 
             <!-- 清档倒计时模块 - 整合2026-2027所有清档时间，新增清档类型标注 -->
             <section class="wipe-countdown">
-                <h2>⏰ 下次清档倒计时</h2>
+                <h2>⏰ 服务器清档倒计时</h2>
                 <div class="countdown-display">
                     <div class="countdown-item">
                         <span class="countdown-number" id="days">00</span>
@@ -801,13 +802,13 @@
                         <span class="countdown-label">秒</span>
                     </div>
                 </div>
-                <p class="next-wipe-date" id="nextWipeDate">下次清档：2026年2月20日</p>
+                <p class="next-wipe-date" id="nextWipeDate">清档日期：2026年2月20日</p>
                 <p class="wipe-type" id="wipeType">清档类型：半月清</p>
             </section>
 
             <!-- 清档时间表模块 - 重构为月份卡片样式 -->
             <section class="wipe-schedule fade-in">
-                <h2>📅 清档时间表</h2>
+                <h2>📅 服务器清档时间表</h2>
                 
                 <!-- 年份切换按钮组 -->
                 <div class="year-toggle-group">
@@ -1297,8 +1298,8 @@
         // 更新倒计时显示
         function updateCountdown() {
             const [nextWipe, wipeType] = getNextWipeInfo();
-            // 更新下次清档日期和类型
-            document.getElementById('nextWipeDate').textContent = `下次清档：${formatDate(nextWipe)}`;
+            // 更新下次和类型
+            document.getElementById('nextWipeDate').textContent = `清档日期：${formatDate(nextWipe)}`;
             document.getElementById('wipeType').textContent = `清档类型：${wipeType}`;
             
             const now = new Date();
